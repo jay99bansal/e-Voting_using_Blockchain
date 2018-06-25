@@ -48,7 +48,7 @@ void continueRegistrationProcess()
     sqlite3 *db;
     char *zErrMsg = 0;
     int rc;
-    rc = sqlite3_open("/Users/jaybansal/Documents/X Code/e-Voting_using_blockchain-Project/e-Voting_using_blockchain-Project/voterData.db", &db);
+    rc = sqlite3_open("/Users/jaybansal/Documents/X Code/Blockchain_e-Voting_Project/Blockchain_e-Voting_Project/voterData.db", &db);
     if( rc ){
         fprintf(stderr, "Can’t open database: %s\n", sqlite3_errmsg(db));
         return;
@@ -57,7 +57,7 @@ void continueRegistrationProcess()
     }
     
     
-    ifstream input_file("/Users/jaybansal/Documents/X Code/e-Voting_using_blockchain-Project/e-Voting_using_blockchain-Project/RSA_Keys", ios::binary);
+    ifstream input_file("/Users/jaybansal/Documents/X Code/Blockchain_e-Voting_Project/Blockchain_e-Voting_Project/RSA_Keys", ios::binary);
     input_file.read((char*)&keyCombo, sizeof(keyCombo));
     input_file.close();
     

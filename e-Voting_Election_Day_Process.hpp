@@ -168,7 +168,7 @@ void openElectionPortal()
 {
     errorFlag=0;
     votedFlag=-1;
-    rc = sqlite3_open("/Users/jaybansal/Documents/X Code/e-Voting_using_blockchain-Project/e-Voting_using_blockchain-Project/voterData.db", &db);
+    rc = sqlite3_open("/Users/jaybansal/Documents/X Code/Blockchain_e-Voting_Project/Blockchain_e-Voting_Project/voterData.db", &db);
     if( rc )
     {
         fprintf(stderr, "Can’t open database: %s\n", sqlite3_errmsg(db));

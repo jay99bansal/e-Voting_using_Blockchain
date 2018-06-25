@@ -147,7 +147,7 @@ void generateKeyPairFile()
     SieveOfEratosthenes(550);
     randomize (primes, 100);
     generateKeys();
-    ofstream output_file("/Users/jaybansal/Documents/X Code/e-Voting_using_blockchain-Project/e-Voting_using_blockchain-Project/RSA_Keys", ios::binary);
+    ofstream output_file("/Users/jaybansal/Documents/X Code/Blockchain_e-Voting_Project/Blockchain_e-Voting_Project/RSA_Keys", ios::binary);
     output_file.write((char*)&keyCombo, sizeof(keyCombo));
     output_file.close();
 }
