@@ -26,7 +26,7 @@ struct transaction
 }tx[4000];
 int noTx = 1;
 int noOfCandidates,choice;
-string cHash;
+string cHash,cName,sign;
 int errorFlag;
 long int d,n,e;
 int votedFlag;
@@ -38,18 +38,21 @@ void errorHandler(int x)
     switch(x)
     {
         case 2:
-            cout<<"This registration ID has already voted!"<<endl;
+            cout<<endl<<"This registration ID has already voted!"<<endl;
             break;
         case 3:
-            cout<<"Invalid registration ID!"<<endl;
+            cout<<endl<<"Invalid registration ID!"<<endl;
+            break;
+        case 4:
+            cout<<endl<<"Invalid Reg. Number/Private Key combination!"<<endl;
             break;
     }
 }
 
 void voteSign()
 {
-    cout<<"Enter your private key";
-    string message1;
+    cout<<endl<<"Enter your private key :- ";
+    sign="";
     cin>>e;
     FOR(j,0,4)
     {
@@ -61,12 +64,11 @@ void voteSign()
             c = c % n;
         }
         encryptedString[j]=c;
-        message1+=encryptedString[j];
+        sign+=encryptedString[j];
     }
-    cout<<"Signature = "<<message1<<endl;
 }
 
-void checkTempSign()
+void checkTempSign(string regId)
 {
     string message2;
     long int decryptedString[4];
@@ -82,7 +84,10 @@ void checkTempSign()
         decryptedString[j]=(m+'0'-1);
         message2+=decryptedString[j];
     }
-    cout<<"Your decrypted Hash:- "<<message2<<endl;
+    if(message2==cHash)
+        cout<<endl<<"Voted \""<<cName<<"\" through Reg. number "<<regId<<" successfully!"<<endl;
+    else
+        errorHandler(4);
 }
 
 
@@ -99,7 +104,10 @@ static int callbck(void *data, int argc, char **argv, char **azColName)
 static int callbck1(void *data, int argc, char **argv, char **azColName)
 {
     if(!(--choice))
+    {
         cHash = argv[0];
+        cName = argv[1];
+    }
     return 0;
 }
 
@@ -124,7 +132,7 @@ void retrieveCandidates(string zone)
         sqlite3_free(zErrMsg);
         errorFlag = 1;
     } else {
-        cout<<"Select your choice (1-"<<noOfCandidates<<") :- ";
+        cout<<endl<<"Select your choice (1-"<<noOfCandidates<<") :- ";
         cin>>choice;
     }
     delete [] sql;
@@ -132,7 +140,7 @@ void retrieveCandidates(string zone)
 
 void retrieveHashOfSelectedCandidate(string zone)
 {
-    string query1 = "SELECT hash FROM candidate WHERE zone='"+zone+"';";
+    string query1 = "SELECT Hash,Name FROM candidate WHERE zone='"+zone+"';";
     char *sql1 = new char[query1.length() + 1];
     strcpy(sql1, query1.c_str());
     rc = sqlite3_exec(db, sql1, callbck1, 0, &zErrMsg);
@@ -142,7 +150,7 @@ void retrieveHashOfSelectedCandidate(string zone)
         errorFlag = 1;
     } else
     {
-        cout<<"You are going to vote:- "<<cHash<<endl;
+        cout<<endl<<"You are going to vote \""<<cName<<"\""<<endl;
     }
     delete [] sql1;
 }
@@ -181,11 +189,10 @@ void openElectionPortal()
     {
         fprintf(stderr, "Opened database successfully\n");
     }
-    string zone;
+    string zone,regId;
     if(!errorFlag)
     {
-        string regId;
-        cout<<endl<<"Enter registration id:";
+        cout<<endl<<"Enter registration id :- ";
         cin>>regId;
         noOfCandidates = 0;
         zone = regId.substr(0,6);
@@ -196,7 +203,7 @@ void openElectionPortal()
         retrieveCandidates(zone);
         retrieveHashOfSelectedCandidate(zone);
         voteSign();
-        checkTempSign();
+        checkTempSign(regId);
     }
     sqlite3_close(db);
 }

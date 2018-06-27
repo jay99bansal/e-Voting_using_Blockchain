@@ -17,9 +17,9 @@ int main(int argc, const char * argv[])
     // generateKeyPairFile();
     // continueRegistrationProcess();
     
-     openElectionPortal();
+    openElectionPortal();
     
     
-    cout<<"Stupid  nn";
+    cout<<endl<<"END!!";
     return 0;
 }
