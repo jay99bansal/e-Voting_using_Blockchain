@@ -16,9 +16,10 @@ int main(int argc, const char * argv[])
     cin.tie(NULL);
     // generateKeyPairFile();
     // continueRegistrationProcess();
-    // openElectionPortal();
+    
+     openElectionPortal();
     
     
-    cout<<"Stupid";
+    cout<<"Stupid  nn";
     return 0;
 }

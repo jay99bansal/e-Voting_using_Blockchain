@@ -49,6 +49,7 @@ void errorHandler(int x)
 void voteSign()
 {
     cout<<"Enter your private key";
+    string message1;
     cin>>e;
     FOR(j,0,4)
     {
@@ -60,7 +61,9 @@ void voteSign()
             c = c % n;
         }
         encryptedString[j]=c;
+        message1+=encryptedString[j];
     }
+    cout<<"Signature = "<<message1<<endl;
 }
 
 void checkTempSign()
@@ -79,7 +82,7 @@ void checkTempSign()
         decryptedString[j]=(m+'0'-1);
         message2+=decryptedString[j];
     }
-    cout<<message2<<endl;
+    cout<<"Your decrypted Hash:- "<<message2<<endl;
 }
 
 
@@ -139,7 +142,7 @@ void retrieveHashOfSelectedCandidate(string zone)
         errorFlag = 1;
     } else
     {
-        cout<<endl;
+        cout<<"You are going to vote:- "<<cHash<<endl;
     }
     delete [] sql1;
 }
