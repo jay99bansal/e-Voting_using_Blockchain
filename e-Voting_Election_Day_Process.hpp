@@ -13,6 +13,7 @@
 #include <sqlite3.h>
 using namespace std;
 #define FOR(i, a, b) for (int i = (a); i < (b); i++)
+#define noTxnBlock 4
 
 sqlite3 *db;
 char *zErrMsg = 0;
@@ -21,16 +22,38 @@ int rc;
 struct transaction
 {
     long long int tID;
+    string regID;
     long int d,n;
-    long int signature;
+    long int signature[4];
 }tx[4000];
-int noTx = 1;
+
+struct block
+{
+    struct transaction* txn[noTxnBlock];
+    long long int bID;
+    int nonce;
+    int difficulty;
+    string prevHash,Hash,nextHash;
+}
+
+int noTx = 1, noBk = 1;
 int noOfCandidates,choice;
-string cHash,cName,sign;
+string cHash,cName;
 int errorFlag;
 long int d,n,e;
 int votedFlag;
 long int encryptedString[4];
+
+
+void createTxn(string regId)
+{
+    tx[noTx-1].tID=noTx;
+    tx[noTx-1].regID=regId;
+    tx[noTx-1].d=d;
+    tx[noTx-1].n=n;
+    FOR(i,0,4) tx[noTx-1].signature[i]=encryptedString[i];
+}
+
 
 void errorHandler(int x)
 {
@@ -52,7 +75,6 @@ void errorHandler(int x)
 void voteSign()
 {
     cout<<endl<<"Enter your private key :- ";
-    sign="";
     cin>>e;
     FOR(j,0,4)
     {
@@ -64,7 +86,6 @@ void voteSign()
             c = c % n;
         }
         encryptedString[j]=c;
-        sign+=encryptedString[j];
     }
 }
 
@@ -204,6 +225,10 @@ void openElectionPortal()
         retrieveHashOfSelectedCandidate(zone);
         voteSign();
         checkTempSign(regId);
+    }
+    if(!errorFlag)
+    {
+        createTxn(regId);
     }
     sqlite3_close(db);
 }
